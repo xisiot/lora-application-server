@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package pm25_message;
+
+message pm25 {
+    optional int32 pm25 = 1;
+    optional int32 pm10 = 2;
+    optional int32 battery = 3;
+}

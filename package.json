@@ -1,0 +1,42 @@
+{
+  "name": "lora-application-server",
+  "version": "1.0.0",
+  "description": "lora-application-server",
+  "main": "./bin/lora-application-server",
+  "scripts": {
+    "test": "mocha --recursive",
+    "lint": "files=$(git diff --cached --name-only --diff-filter=ACM | grep '\\.js$'); jshint $files && jscs $files"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xisiot/lora-application-server"
+  },
+  "keywords": [
+    "lora"
+  ],
+  "author": "xisiot Co., Ltd.",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-json-schema-ajv": "^1.0.0",
+    "jscs": "^3.0.7",
+    "jshint": "^2.9.5",
+    "mocha": "^4.0.1",
+    "pre-commit": "^1.2.2"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "cloud-lib": "git+ssh://git@211.68.70.104/cloud-lib#develop",
+    "ioredis": "^2.5.0",
+    "kafka-node": "^2.3.0",
+    "lodash": "^4.17.4",
+    "mysql2": "^1.5.1",
+    "protobufjs": "^6.8.0",
+    "sequelize": "^4.22.6",
+    "winston": "^3.0.0-rc1"
+  },
+  "pre-commit": [
+    "test",
+    "lint"
+  ]
+}

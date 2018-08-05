@@ -1,0 +1,77 @@
+#!/usr/bin/env node
+
+const config = require('../config/config');
+const bluebird = require('bluebird');
+const NsMsgHandler = require('../lib/nsMsgHandler');
+const CloudMsgHandler = require('../lib/cloudMsgHandler');
+
+const ProtoBufUnit = require('../lib/protoBufferUnit');
+const DbModels = require('../models');
+const loraLib = require('../lib/lora-lib');
+const { ERROR, MQClient, Log, utils, dbClient } = loraLib;
+
+const log = new Log(config.log);
+const dbModels = new DbModels(dbClient);
+const redisConn = dbModels.redisConn;
+const mysqlConn = dbModels.mysqlConn;
+const mqClient = new MQClient(config.mqClient, log);
+const protoBufUnit = new ProtoBufUnit(log);
+const nsMsgHandler = new NsMsgHandler(mqClient, mysqlConn, protoBufUnit, log);
+const cloudMsgHandler = new CloudMsgHandler(dbModels, protoBufUnit, log);
+
+mqClient.connect()
+  .then(() => {
+    mqClient.message((message) => {
+      const messageTopic = message.topic;
+
+      if (messageTopic === config.mqClient.topics.subFromCloud) {
+
+        //Receive Message from Cloud
+        log.debug({
+          label: `Msg from ${messageTopic}`,
+          message: message,
+        });
+
+        return cloudMsgHandler.handler(message.value)
+          .catch(error => {
+            ErrorHandler(error);
+          });
+
+      } else if (messageTopic === config.mqClient.topics.subFromServer) {
+
+        //Receive Message from Network Server
+        log.debug({
+          label: `Msg from ${messageTopic}`,
+          message: message,
+        });
+
+        return nsMsgHandler.handler(message.value)
+          .catch(error => {
+            ErrorHandler(error);
+          });
+      } else {
+        log.error(new Error(`Error topic "${message.topic}", Message "${message.value}"`).message);
+      }
+    });
+
+    log.debug('Listening on Kafka topic : ' + config.mqClient.consumerGroup.topics);
+    return bluebird.resolve();
+  })
+  .catch(error => {
+    log.error(error.message);
+    dbModels.close();
+    mqClient.disconnect();
+    service.closeService();
+  });
+
+function ErrorHandler(error) {
+  if (error instanceof ERROR.MsgTypeError) {
+    log.error(error.message);
+  } else if (error instanceof ERROR.JsonSchemaError) {
+    log.error(error.message);
+  } else if (error instanceof ERROR.DeviceNotExistError) {
+    log.error(error.message);
+  } else {
+    log.error(error);
+  }
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const config = require('../config/config');
+const config = require('../config');
 const bluebird = require('bluebird');
 const NsMsgHandler = require('../lib/nsMsgHandler');
 const CloudMsgHandler = require('../lib/cloudMsgHandler');
@@ -14,7 +14,7 @@ const log = new Log(config.log);
 const dbModels = new DbModels(dbClient);
 const redisConn = dbModels.redisConn;
 const mysqlConn = dbModels.mysqlConn;
-const mqClient = new MQClient(config.mqClient, log);
+const mqClient = new MQClient(config.mqClient_as, log);
 const protoBufUnit = new ProtoBufUnit(log);
 const nsMsgHandler = new NsMsgHandler(mqClient, mysqlConn, protoBufUnit, log);
 const cloudMsgHandler = new CloudMsgHandler(dbModels, protoBufUnit, log);
@@ -24,7 +24,7 @@ mqClient.connect()
     mqClient.message((message) => {
       const messageTopic = message.topic;
 
-      if (messageTopic === config.mqClient.topics.subFromCloud) {
+      if (messageTopic === config.mqClient_as.topics.subFromCloud) {
 
         //Receive Message from Cloud
         log.debug({
@@ -37,7 +37,7 @@ mqClient.connect()
             ErrorHandler(error);
           });
 
-      } else if (messageTopic === config.mqClient.topics.subFromServer) {
+      } else if (messageTopic === config.mqClient_as.topics.subFromServer) {
 
         //Receive Message from Network Server
         log.debug({
@@ -54,7 +54,7 @@ mqClient.connect()
       }
     });
 
-    log.debug('Listening on Kafka topic : ' + config.mqClient.consumerGroup.topics);
+    log.debug('Listening on Kafka topic : ' + config.mqClient_as.consumerGroup.topics);
     return bluebird.resolve();
   })
   .catch(error => {

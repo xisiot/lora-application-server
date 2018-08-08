@@ -42,7 +42,7 @@ module.exports = {
     longTimeOut: 15000,
   },
   nsid: nsid,
-  mqClient: {
+  mqClient_as: {
     nsid: `${nsid}`, // if exist in topic schema
     consumerGroup: {
       options: {

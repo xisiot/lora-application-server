@@ -1,0 +1,76 @@
+{
+    "database": {
+      "mysql": {
+        "username": "username",
+        "password": "password",
+        "database": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "dialect": "mysql",
+        "operatorsAliases": false,
+        "logging": false,
+        "timezone": "+08:00",
+        "define": {
+          "freezeTableName": true,
+          "timestamp": true,
+          "charset": "utf8"
+        }
+      },
+      "redis": {
+        "cluster": false,
+        "options": [
+          {
+            "host": "localhost",
+            "port": 6379
+          }
+        ]
+      }
+    },
+    "mocha": {
+      "timeout": 5000,
+      "longTimeOut": 15000
+    },
+    "log": {
+      "level": "debug",
+      "colorize": true
+    },
+    "mqClient_as": {
+      "consumerGroup": {
+        "options": {
+          "kafkaHost": "localhost:9092",
+          "groupId": "lora-application-server-message-dispatch-in",
+          "sessionTimeout": 15000,
+          "protocol": [
+            "roundrobin"
+          ],
+          "fromOffset": "latest"
+        },
+        "topics": [
+          "AS-sub",
+          "cloud-sub"
+        ]
+      },
+      "client": {
+        "kafkaHost": "localhost:9092",
+        "clientId": "lora-application-server-message-dispatch-out"
+      },
+      "producer": {
+        "requireAcks": 1,
+        "ackTimeoutMs": 100,
+        "partitionerType": 2
+      },
+      "schemaPath": {
+        "messages": "config/messages.json",
+        "common": "config/common.jso"
+      },
+      "topics": {
+        "pubToCloud": "cloud-pub",
+        "subFromCloud": "cloud-sub",
+        "pubToServer": "AS-pub",
+        "subFromServer": "AS-sub"
+      }
+    },
+    "pb": {
+      "260febaf6c60807b": "pm25_message.pm25"
+    }
+  }

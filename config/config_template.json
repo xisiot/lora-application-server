@@ -61,7 +61,7 @@
       },
       "schemaPath": {
         "messages": "config/messages.json",
-        "common": "config/common.jso"
+        "common": "config/common.json"
       },
       "topics": {
         "pubToCloud": "cloud-pub",

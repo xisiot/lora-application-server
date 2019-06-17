@@ -1,0 +1,23 @@
+syntax = "proto2";
+
+package sensor_message;
+
+message air {
+	
+	optional int32 pm25 = 1;
+	optional int32 pm10 = 2;
+	optional int32 battery = 3;
+
+}
+
+message sensor {
+	
+	optional float wind_speed = 1;
+	optional float temp = 2;
+    optional float humi = 3;
+	optional int32 battery = 4;
+	optional int32 pm25 = 5;
+	optional int32 pm10 = 6;
+    optional int32 wind_direction = 7;
+
+}

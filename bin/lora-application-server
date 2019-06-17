@@ -7,6 +7,7 @@ const CloudMsgHandler = require('../lib/cloudMsgHandler');
 
 const ProtoBufUnit = require('../lib/protoBufferUnit');
 const DbModels = require('../models');
+const mongoose = require('mongoose');
 const loraLib = require('../lib/lora-lib');
 const { ERROR, MQClient, Log, utils, dbClient } = loraLib;
 
@@ -14,9 +15,10 @@ const log = new Log(config.log);
 const dbModels = new DbModels(dbClient);
 const redisConn = dbModels.redisConn;
 const mysqlConn = dbModels.mysqlConn;
+const mongoConn = dbModels._mongoose;
 const mqClient = new MQClient(config.mqClient_as, log);
 const protoBufUnit = new ProtoBufUnit(log);
-const nsMsgHandler = new NsMsgHandler(mqClient, mysqlConn, protoBufUnit, log);
+const nsMsgHandler = new NsMsgHandler(mqClient, mysqlConn, mongoConn, protoBufUnit, log);
 const cloudMsgHandler = new CloudMsgHandler(dbModels, protoBufUnit, log);
 
 mqClient.connect()

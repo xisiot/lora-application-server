@@ -32,7 +32,9 @@
     "mysql2": "^1.5.1",
     "protobufjs": "^6.8.0",
     "sequelize": "^4.22.6",
-    "winston": "^3.0.0-rc1"
+    "winston": "^3.0.0-rc1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.3"
   },
   "pre-commit": [
     "test",

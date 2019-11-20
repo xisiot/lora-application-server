@@ -17,7 +17,7 @@ const redisConn = dbModels.redisConn;
 const mysqlConn = dbModels.mysqlConn;
 const mongoConn = dbModels._mongoose;
 const mqClient = new MQClient(config.mqClient_as, log);
-const protoBufUnit = new ProtoBufUnit(log);
+const protoBufUnit = new ProtoBufUnit(log, mysqlConn);
 const nsMsgHandler = new NsMsgHandler(mqClient, mysqlConn, mongoConn, protoBufUnit, log);
 const cloudMsgHandler = new CloudMsgHandler(dbModels, protoBufUnit, log);
 
@@ -51,6 +51,12 @@ mqClient.connect()
           .catch(error => {
             ErrorHandler(error);
           });
+      } else if (messageTopic === config.mqClient_as.topics.pbFromHttpServer) {
+        protoBufUnit.loadAllData();
+        log.debug({
+          label: `Msg from ${messageTopic}`,
+          message: message,
+        });
       } else {
         log.error(new Error(`Error topic "${message.topic}", Message "${message.value}"`).message);
       }

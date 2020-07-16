@@ -28,7 +28,7 @@
     "bluebird": "^3.5.1",
     "ioredis": "^2.5.0",
     "kafka-node": "^2.3.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "mysql2": "^1.5.1",
     "protobufjs": "^6.8.0",
     "sequelize": "^4.22.6",
